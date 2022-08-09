@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 
 
 export function activate(context: vscode.ExtensionContext) {
@@ -9,7 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
 		const selectedText = editor?.document.getText(editor?.selection)
 
 		const spawn = require("child_process").spawn;
-		const pythonProcess = spawn('python',[context.extensionPath + "/src/predict.py", context.extensionPath + "/src", selectedText]);
+		const pythonProcess = spawn('python',[context.extensionPath + "/resources/predict.py", context.extensionPath + "/resources", selectedText]);
 	
 
 		pythonProcess.stdout.on('data', (data:any) => {

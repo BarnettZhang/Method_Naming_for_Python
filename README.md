@@ -2,7 +2,7 @@
 
 ## Features
 
-This plug-in uses a pre-trained CodeBerTa model to generate recommended method name for your code. After selecting the code that you want to name, right click on the selected text and choose "Method Name Generate" or use shortcut "Ctrl + Shift + F1" on Windows, a message containing the recommended method names will show at the right bottom corner. 
+This plug-in uses a pre-trained CodeBERTa model to generate recommended method name for your code. After selecting the code that you want to name, right click on the selected text and choose "Method Name Generate" or use shortcut "Ctrl + Shift + F1" on Windows, a message containing the recommended method names will show at the right bottom corner. 
 
 ![](images/2022-08-08-03-53-49.png)
 ![](images/2022-08-08-03-54-57.png)
@@ -11,7 +11,7 @@ This plug-in uses a pre-trained CodeBerTa model to generate recommended method n
 
 ## Requirements
 
-The CodeBerTa model requires transformers and pytorch to run. You could install trnasformers with the following command:
+The CodeBERTa model requires transformers and pytorch to run. You could install trnasformers with the following command:
 
     pip install transformers
 
