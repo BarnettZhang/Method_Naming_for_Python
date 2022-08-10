@@ -39,4 +39,12 @@ The maximum length of the selected text is set to be 1000 characters. Any input 
 
 ### 1.0.0
 
-Initial release of Method Naming for Python
+- Initial release of Method Naming for Python
+
+## 1.0.1
+
+- Now the installation package includes the pre-trained model
+
+## 1.0.2
+
+- Change the model loading function. Now the model size is reduced.

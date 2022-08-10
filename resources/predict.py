@@ -1,3 +1,4 @@
+from distutils.command.config import config
 from transformers import RobertaTokenizer
 import torch
 import dill
@@ -5,17 +6,21 @@ import sys
 from time import time
 import os.path
 import zipfile
-
+from CodeBERTaModel import CodeBERTaEncoderDecoder
+from Config import Config
 
 def predict(src_path, selected_code):
     # Check if model is unzipped, if not, unzip the model
-    if not os.path.isfile(src_path + '/LayerDropModelTrue'):
-        with zipfile.ZipFile(src_path + '/LayerDropModelTrue.zip', 'r') as zip_ref:
+    if not os.path.isfile(src_path + '/LayerDropState'):
+        with zipfile.ZipFile(src_path + '/LayerDropState.zip', 'r') as zip_ref:
             zip_ref.extractall(src_path)
-        os.remove(src_path + '/LayerDropModelTrue.zip')
+        os.remove(src_path + '/LayerDropState.zip')
 
-    model = torch.load(src_path + '/LayerDropModelTrue', pickle_module=dill, map_location=torch.device('cpu'))
-    model.device = torch.device('cpu')
+    device = torch.device("cpu")
+    config = Config()
+    model = CodeBERTaEncoderDecoder(config,device)
+    model.load_state_dict(torch.load(src_path + '/LayerDropState', pickle_module=dill, map_location='cpu'), strict=False)
+    # model.device = torch.device('cpu')
     
     selected_code_raw = selected_code
     

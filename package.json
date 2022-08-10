@@ -3,7 +3,7 @@
   "displayName": "Method Naming for Python",
   "description": "An AI-driven method naming tool for Python",
   "publisher": "ZipeiZhang",
-  "version": "0.0.1",
+  "version": "1.0.2",
   "engines": {
     "vscode": "^1.69.0"
   },
@@ -39,12 +39,11 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "test-compile": "tsc -p ./"
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",
@@ -55,6 +54,7 @@
     "@typescript-eslint/eslint-plugin": "^5.30.0",
     "@typescript-eslint/parser": "^5.30.0",
     "@vscode/test-electron": "^2.1.5",
+    "esbuild": "^0.14.54",
     "eslint": "^8.18.0",
     "glob": "^8.0.3",
     "mocha": "^10.0.0",
