@@ -8,19 +8,25 @@ import os.path
 import zipfile
 from CodeBERTaModel import CodeBERTaEncoderDecoder
 from Config import Config
+import time
 
-def predict(src_path, selected_code):
+
+def measureExecutionTime(src_path, selected_code):
     # Check if model is unzipped, if not, unzip the model
+    t0 = time.time()
     if not os.path.isfile(src_path + '/LayerDropState'):
         with zipfile.ZipFile(src_path + '/LayerDropState.zip', 'r') as zip_ref:
             zip_ref.extractall(src_path)
         os.remove(src_path + '/LayerDropState.zip')
+    t1 = time.time()
 
     # Load the model to CPU
     device = torch.device("cpu")
     config = Config()
     model = CodeBERTaEncoderDecoder(config,device)
     model.load_state_dict(torch.load(src_path + '/LayerDropState', pickle_module=dill, map_location='cpu'), strict=False)
+
+    t2 = time.time()
 
     # Tokenize the selected code and make the prediction using the model. 
     # Adapted from the final project of Ugo Benassayag, https://github.com/UgoBena/Sourcery_Project
@@ -32,13 +38,13 @@ def predict(src_path, selected_code):
     evaluate_input = [(selected_code[0], [0, 883, 19603, 8588, 2], len(selected_code[0]), 5, selected_code_raw[0])]
     top_sequence,top_length,tgt_seqs,tgt_lens,output_prob,decoded_sequences,inputs_raw = model.evaluate(evaluate_input)
 
-    return decoded_sequences
+    t3 = time.time()
+
+    outputStr = "Time taken to unzip the model state: " + str(round(t1 - t0, 3)) + 's\n' + "Time taken to load the model: " + str(round(t2 - t1, 3)) + 's\n' + "Time taken to make the prediction: " + str(round(t3 - t2, 3)) + 's\n'
+    return outputStr
 
 if __name__ == "__main__" :
     # Print the prediction output, extension.js will collect the stdout and display it on the msg.
-    name_list = predict(sys.argv[1], sys.argv[2])
-    ind = 1
-    for name in name_list[0]:
-        print(str(ind) + '. ' + name.lstrip("_").rstrip("_"))
-        ind = ind + 1
+    measureTime = measureExecutionTime(sys.argv[1], sys.argv[2])
+    print(measureTime)
     sys.stdout.flush()

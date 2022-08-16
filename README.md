@@ -19,6 +19,10 @@ You could install pytorch with the following command:
 
     pip3 install torch torchvision torchaudio
 
+Dill is also required to load the model. You could install dill with this command:
+
+    pip install dill
+
 
 <!-- ## Extension Settings
 
@@ -33,7 +37,8 @@ This extension contributes the following settings:
 
 ## Known Issues
 
-The maximum length of the selected text is set to be 1000 characters. Any input which is longer than that will be capped at 1000 characters.
+- The maximum length of the selected text is set to be 1000 characters. Any input which is longer than that will be capped at 1000 characters.
+- The first time running this extension will unzip the model, which might take more time.
 
 ## Release Notes
 
