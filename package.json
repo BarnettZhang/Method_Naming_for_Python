@@ -13,6 +13,9 @@
   "activationEvents": [
     "onCommand:sourcery.generate",
     "onCommand:sourcery.measureTime",
+    "onCommand:sourcery.loadModel",
+    "onCommand:sourcery.generateFromClient",
+    "onCommand:sourcery.unloadModel",
     "onLanguage:python"
   ],
   "main": "./out/extension.js",
@@ -25,6 +28,18 @@
       {
         "command": "sourcery.measureTime",
         "title": "Test Execution Time"
+      },
+      {
+        "command": "sourcery.loadModel",
+        "title": "Load Model"
+      },
+      {
+        "command": "sourcery.generateFromClient",
+        "title": "Method Name Generate by Loaded Model"
+      },
+      {
+        "command": "sourcery.unloadModel",
+        "title": "Unload Model"
       }
     ],
     "keybindings": [
@@ -37,6 +52,20 @@
         "command": "sourcery.measureTime",
         "key": "ctrl+shift+f2",
         "when": "editorHasSelection"
+      },
+      {
+        "command": "sourcery.loadModel",
+        "key": "ctrl+shift+f3"
+      },
+      {
+        "command": "sourcery.generateFromClient",
+        "key": "ctrl+shift+f4",
+        "when": "editorHasSelection"
+      },
+      {
+        "command": "sourcery.unloadModel",
+        "key": "ctrl+shift+f5",
+        "when": "editorHasSelection"
       }
     ],
     "menus": {
@@ -47,6 +76,17 @@
         },
         {
           "command": "sourcery.measureTime",
+          "group": "9_cutcopypaste"
+        },
+        {
+          "command": "sourcery.loadModel",
+          "group": "9_cutcopypaste"
+        },
+        {
+          "command": "sourcery.generateFromClient",
+          "group": "9_cutcopypaste"
+        },{
+          "command": "sourcery.unloadModel",
           "group": "9_cutcopypaste"
         }
       ]
