@@ -5,3 +5,7 @@ node_modules
 *.vsix
 resources/LayerDropState.zip
 resources/LayerDropState
+resources/OriginalFullDatasetState
+resources/OriginalFullDatasetState.zip
+resources/LayerDropState.zip
+resources/LayerDropState.zip

@@ -26,12 +26,13 @@ def measureExecutionTime(src_path, selected_code):
     model = CodeBERTaEncoderDecoder(config,device)
     model.load_state_dict(torch.load(src_path + '/LayerDropState', pickle_module=dill, map_location='cpu'), strict=False)
 
-    t2 = time.time()
-
     # Tokenize the selected code and make the prediction using the model. 
     # Adapted from the final project of Ugo Benassayag, https://github.com/UgoBena/Sourcery_Project
     selected_code_raw = selected_code
     tokenizer = RobertaTokenizer.from_pretrained("huggingface/CodeBERTa-small-v1")
+
+    t2 = time.time()
+
     selected_code = tokenizer.batch_encode_plus([selected_code])["input_ids"]
     underscore_token = tokenizer.get_vocab()["_"]
     selected_code = [[token for token in input if token != underscore_token][:tokenizer.model_max_length] for input in selected_code]
