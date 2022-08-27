@@ -11,7 +11,11 @@ from Config import Config
 import time
 
 
-def measureExecutionTime(src_path, selected_code):
+def measureExecutionTime(src_path, selected_code, device):
+    if device == 'false': 
+        device = torch.device("cpu")
+    else:
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     # Check if model is unzipped, if not, unzip the model
     t0 = time.time()
     if not os.path.isfile(src_path + '/LayerDropState'):
@@ -21,7 +25,6 @@ def measureExecutionTime(src_path, selected_code):
     t1 = time.time()
 
     # Load the model to CPU
-    device = torch.device("cpu")
     config = Config()
     model = CodeBERTaEncoderDecoder(config,device)
     model.load_state_dict(torch.load(src_path + '/LayerDropState', pickle_module=dill, map_location='cpu'), strict=False)
@@ -46,6 +49,6 @@ def measureExecutionTime(src_path, selected_code):
 
 if __name__ == "__main__" :
     # Print the prediction output, extension.js will collect the stdout and display it on the msg.
-    measureTime = measureExecutionTime(sys.argv[1], sys.argv[2])
+    measureTime = measureExecutionTime(sys.argv[1], sys.argv[2], sys.argv[3])
     print(measureTime)
     sys.stdout.flush()

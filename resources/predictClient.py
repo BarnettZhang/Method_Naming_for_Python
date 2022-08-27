@@ -3,6 +3,8 @@ import sys
 
 
 if __name__ == "__main__":
+    with open('isFirstExecution.txt', 'w') as f:
+        f.write('true')
     context = zmq.Context()
     socket = context.socket(zmq.REQ)
     socket.connect("tcp://localhost:5555")

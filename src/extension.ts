@@ -10,15 +10,36 @@ export function activate(context: vscode.ExtensionContext) {
 		const selectedText = editor?.document.getText(editor?.selection)
 
 		const spawn = require("child_process").spawn;
-		const pythonProcess = spawn('python',[context.extensionPath + "/resources/predict.py", context.extensionPath + "/resources", selectedText]);
-	
+		const device = vscode.workspace.getConfiguration('methodnamingforpython').get('device');
+		if (vscode.workspace.getConfiguration('methodnamingforpython').get('autoLoadModel') == false) {
+			const pythonProcess = spawn('python',[context.extensionPath + "/resources/predict.py", context.extensionPath + "/resources", selectedText, String(device)]);
 
-		pythonProcess.stdout.on('data', (data:any) => {
-			vscode.window.showInformationMessage("The top 5 recommended method names are: " + data);
-			var endTime = performance.now()
-			var time = ((endTime - startTime) / 1000).toFixed(3);
-			vscode.window.showInformationMessage("The time taken to execute the extension is: " + String(time) + "s");
-		}); 
+			pythonProcess.stdout.on('data', (data:any) => {
+				vscode.window.showInformationMessage("The top 5 recommended method names are: " + data);
+				var endTime = performance.now()
+				var time = ((endTime - startTime) / 1000).toFixed(3);
+				vscode.window.showInformationMessage("The time taken to execute the extension is: " + String(time) + "s");
+			}); 
+
+		}
+		else {
+			const pythonProcess = spawn('python',[context.extensionPath + "/resources/loadModel.py", context.extensionPath + "/resources", String(device)]);
+			
+
+			pythonProcess.stdout.on('data', (data:any) => {
+				vscode.window.showInformationMessage(String(data));
+			}); 
+			const spawn1 = require("child_process").spawn;
+			const pythonProcess1 = spawn1('python',[context.extensionPath + "/resources/predictClient.py", selectedText]);
+		
+			pythonProcess1.stdout.on('data', (data:any) => {
+				vscode.window.showInformationMessage("The top 5 recommended method names are: " + data);
+				var endTime = performance.now();
+				var time = ((endTime - startTime) / 1000).toFixed(3);
+				vscode.window.showInformationMessage("The time taken to execute the extension is: " + String(time) + "s");
+			}); 
+			
+		}
 		
 	});
 	context.subscriptions.push(disposable1);
@@ -28,9 +49,10 @@ export function activate(context: vscode.ExtensionContext) {
 		var startTime = performance.now();
 		const editor = vscode.window.activeTextEditor; 
 		const selectedText = editor?.document.getText(editor?.selection);
+		const device = vscode.workspace.getConfiguration('methodnamingforpython').get('device');
 
 		const spawn = require("child_process").spawn;
-		const pythonProcess = spawn('python',[context.extensionPath + "/resources/measureExecutionTime.py", context.extensionPath + "/resources", selectedText]);
+		const pythonProcess = spawn('python',[context.extensionPath + "/resources/measureExecutionTime.py", context.extensionPath + "/resources", selectedText, String(device)]);
 	
 
 		pythonProcess.stdout.on('data', (data:any) => {
@@ -44,42 +66,42 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(disposable2);
 
-	let disposable3 = vscode.commands.registerCommand('sourcery.loadModel', () => {
+	// let disposable3 = vscode.commands.registerCommand('sourcery.loadModel', () => {
 		
-		var startTime = performance.now()
-		const spawn = require("child_process").spawn;
-		const pythonProcess = spawn('python',[context.extensionPath + "/resources/loadModel.py", context.extensionPath + "/resources"]);
+	// 	var startTime = performance.now()
+	// 	const spawn = require("child_process").spawn;
+	// 	const pythonProcess = spawn('python',[context.extensionPath + "/resources/loadModel.py", context.extensionPath + "/resources"]);
 	
 
-		pythonProcess.stdout.on('data', (data:any) => {
-			vscode.window.showInformationMessage(String(data));
-			var endTime = performance.now();
-			var time = ((endTime - startTime) / 1000).toFixed(3);
-			vscode.window.showInformationMessage("The time taken to execute the extension is: " + String(time) + "s");
-		}); 
+	// 	pythonProcess.stdout.on('data', (data:any) => {
+	// 		vscode.window.showInformationMessage(String(data));
+	// 		var endTime = performance.now();
+	// 		var time = ((endTime - startTime) / 1000).toFixed(3);
+	// 		vscode.window.showInformationMessage("The time taken to execute the extension is: " + String(time) + "s");
+	// 	}); 
 		
-	});
-	context.subscriptions.push(disposable3);
+	// });
+	// context.subscriptions.push(disposable3);
 
-	let disposable4 = vscode.commands.registerCommand('sourcery.generateFromClient', () => {
+	// let disposable4 = vscode.commands.registerCommand('sourcery.generateFromClient', () => {
 		
-		var startTime = performance.now()
-		const editor = vscode.window.activeTextEditor; 
-		const selectedText = editor?.document.getText(editor?.selection)
+	// 	var startTime = performance.now()
+	// 	const editor = vscode.window.activeTextEditor; 
+	// 	const selectedText = editor?.document.getText(editor?.selection)
 
-		const spawn = require("child_process").spawn;
-		const pythonProcess = spawn('python',[context.extensionPath + "/resources/predictClient.py", selectedText]);
+	// 	const spawn = require("child_process").spawn;
+	// 	const pythonProcess = spawn('python',[context.extensionPath + "/resources/predictClient.py", selectedText]);
 	
 
-		pythonProcess.stdout.on('data', (data:any) => {
-			vscode.window.showInformationMessage("The top 5 recommended method names are: " + data);
-			var endTime = performance.now();
-			var time = ((endTime - startTime) / 1000).toFixed(3);
-			vscode.window.showInformationMessage("The time taken to execute the extension is: " + String(time) + "s");
-		}); 
+	// 	pythonProcess.stdout.on('data', (data:any) => {
+	// 		vscode.window.showInformationMessage("The top 5 recommended method names are: " + data);
+	// 		var endTime = performance.now();
+	// 		var time = ((endTime - startTime) / 1000).toFixed(3);
+	// 		vscode.window.showInformationMessage("The time taken to execute the extension is: " + String(time) + "s");
+	// 	}); 
 		
-	});
-	context.subscriptions.push(disposable4);
+	// });
+	// context.subscriptions.push(disposable4);
 
 	let disposable5 = vscode.commands.registerCommand('sourcery.unloadModel', () => {
 		
@@ -93,7 +115,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}); 
 		
 	});
-	context.subscriptions.push(disposable4);
+	context.subscriptions.push(disposable5);
 }
 
 

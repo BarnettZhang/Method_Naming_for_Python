@@ -9,7 +9,7 @@ import zipfile
 from CodeBERTaModel import CodeBERTaEncoderDecoder
 from Config import Config
 
-def predict(src_path, selected_code):
+def predict(src_path, selected_code, device):
     # Check if model is unzipped, if not, unzip the model
     if not os.path.isfile(src_path + '/LayerDropState'):
         with zipfile.ZipFile(src_path + '/LayerDropState.zip', 'r') as zip_ref:
@@ -17,7 +17,10 @@ def predict(src_path, selected_code):
         os.remove(src_path + '/LayerDropState.zip')
 
     # Load the model to CPU
-    device = torch.device("cpu")
+    if device == 'false': 
+        device = torch.device("cpu")
+    else:
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     config = Config()
     model = CodeBERTaEncoderDecoder(config,device)
     model.load_state_dict(torch.load(src_path + '/LayerDropState', pickle_module=dill, map_location='cpu'), strict=False)
@@ -36,7 +39,7 @@ def predict(src_path, selected_code):
 
 if __name__ == "__main__" :
     # Print the prediction output, extension.js will collect the stdout and display it on the msg.
-    name_list = predict(sys.argv[1], sys.argv[2])
+    name_list = predict(sys.argv[1], sys.argv[2], sys.argv[3])
     ind = 1
     for name in name_list[0]:
         print(str(ind) + '. ' + name.lstrip("_").rstrip("_"))
