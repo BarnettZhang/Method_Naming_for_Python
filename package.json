@@ -3,7 +3,7 @@
   "displayName": "Method Naming for Python",
   "description": "An AI-driven method naming tool for Python",
   "publisher": "ZipeiZhang",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "engines": {
     "vscode": "^1.69.0"
   },

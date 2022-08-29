@@ -53,3 +53,7 @@ This extension contributes the following settings:
 ## 1.0.2
 
 - Change the model loading function. Now the model size is reduced.
+
+## 1.0.3
+
+- Now the plug-in allows settings about model loading. 

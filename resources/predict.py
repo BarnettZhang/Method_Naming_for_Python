@@ -10,11 +10,13 @@ from CodeBERTaModel import CodeBERTaEncoderDecoder
 from Config import Config
 
 def predict(src_path, selected_code, device):
+    model_name = 'QuantizeState'
+    
     # Check if model is unzipped, if not, unzip the model
-    if not os.path.isfile(src_path + '/LayerDropState'):
-        with zipfile.ZipFile(src_path + '/LayerDropState.zip', 'r') as zip_ref:
+    if not os.path.isfile(src_path + model_name):
+        with zipfile.ZipFile(src_path + model_name + '.zip', 'r') as zip_ref:
             zip_ref.extractall(src_path)
-        os.remove(src_path + '/LayerDropState.zip')
+        os.remove(src_path + model_name + '.zip')
 
     # Load the model to CPU
     if device == 'false': 
@@ -23,7 +25,7 @@ def predict(src_path, selected_code, device):
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     config = Config()
     model = CodeBERTaEncoderDecoder(config,device)
-    model.load_state_dict(torch.load(src_path + '/LayerDropState', pickle_module=dill, map_location='cpu'), strict=False)
+    model.load_state_dict(torch.load(src_path + model_name, pickle_module=dill, map_location='cpu'), strict=False)
 
     # Tokenize the selected code and make the prediction using the model. 
     # Adapted from the final project of Ugo Benassayag, https://github.com/UgoBena/Sourcery_Project

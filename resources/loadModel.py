@@ -21,10 +21,11 @@ if __name__ == "__main__":
         socket = context.socket(zmq.REP)
         socket.bind("tcp://*:5555")
         src_path = sys.argv[1]
-        if not os.path.isfile(src_path + '/LayerDropState'):
-            with zipfile.ZipFile(src_path + '/LayerDropState.zip', 'r') as zip_ref:
+        model_name = '/QuantizeState'
+        if not os.path.isfile(src_path + model_name):
+            with zipfile.ZipFile(src_path + model_name + '.zip', 'r') as zip_ref:
                 zip_ref.extractall(src_path)
-            os.remove(src_path + '/LayerDropState.zip')
+            os.remove(src_path + model_name + '.zip')
         t1 = time.time()
 
         # Load the model to CPU
@@ -34,7 +35,7 @@ if __name__ == "__main__":
             device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         config = Config()
         model = CodeBERTaEncoderDecoder(config,device)
-        model.load_state_dict(torch.load(src_path + '/LayerDropState', pickle_module=dill, map_location='cpu'), strict=False)
+        model.load_state_dict(torch.load(src_path + model_name, pickle_module=dill, map_location='cpu'), strict=False)
         tokenizer = RobertaTokenizer.from_pretrained("huggingface/CodeBERTa-small-v1")
 
         print("Model is loaded and ready!")
@@ -44,6 +45,8 @@ if __name__ == "__main__":
             message = socket.recv().decode("utf-8") 
 
             if message != "ThisIsToStopRunningTheModel":
+                # Tokenize the selected code and make the prediction using the model. 
+                # Adapted from the final project of Ugo Benassayag, https://github.com/UgoBena/Sourcery_Project
                 selected_code_raw = message
                 selected_code = tokenizer.batch_encode_plus([message])["input_ids"]
                 underscore_token = tokenizer.get_vocab()["_"]

@@ -7,3 +7,5 @@ resources/LayerDropState.zip
 resources/LayerDropState
 resources/OriginalFullDatasetState
 resources/OriginalFullDatasetState.zip
+resources/QuantizeStateINT8Layer1234
+resources/QuantizeState
